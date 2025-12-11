@@ -1,53 +1,93 @@
 version: '3'
 services:
-  yuoj-backend-gateway:
-    container_name: yuoj-backend-gateway
+  judgemind-backend-gateway:
+    container_name: judgemind-backend-gateway
     build:
-      context: ./yuoj-backend-gateway
+      context: ./judgemind-backend-gateway
       dockerfile: Dockerfile
     ports:
       - "8101:8101"
     networks:
       - mynetwork
+    # ============ 新增部分开始 ============
+    environment:
+      - JAVA_OPTS=-Xmx256m -XX:+UseContainerSupport
+    command: java $JAVA_OPTS -jar app.jar
+    deploy:
+      resources:
+        limits:
+          memory: 350M
+    restart: unless-stopped
+    # ============ 新增部分结束 ============
 
-  yuoj-backend-user-service:
-    container_name: yuoj-backend-user-service
+  judgemind-backend-user-service:
+    container_name: judgemind-backend-user-service
     build:
-      context: ./yuoj-backend-user-service
+      context: ./judgemind-backend-user-service
       dockerfile: Dockerfile
     ports:
       - "8102:8102"
     networks:
       - mynetwork
     depends_on:
-      - yuoj-backend-gateway
+      - judgemind-backend-gateway
+    # ============ 新增部分开始 ============
+    environment:
+      - JAVA_OPTS=-Xmx256m -XX:+UseContainerSupport
+    command: java $JAVA_OPTS -jar app.jar
+    deploy:
+      resources:
+        limits:
+          memory: 350M
+    restart: unless-stopped
+    # ============ 新增部分结束 ============
 
-  yuoj-backend-question-service:
-    container_name: yuoj-backend-question-service
+  judgemind-backend-question-service:
+    container_name: judgemind-backend-question-service
     build:
-      context: ./yuoj-backend-question-service
+      context: ./judgemind-backend-question-service
       dockerfile: Dockerfile
     ports:
       - "8103:8103"
     networks:
       - mynetwork
     depends_on:
-      - yuoj-backend-user-service
-      - yuoj-backend-gateway
+      - judgemind-backend-user-service
+      - judgemind-backend-gateway
+    # ============ 新增部分开始 ============
+    environment:
+      - JAVA_OPTS=-Xmx256m -XX:+UseContainerSupport
+    command: java $JAVA_OPTS -jar app.jar
+    deploy:
+      resources:
+        limits:
+          memory: 350M
+    restart: unless-stopped
+    # ============ 新增部分结束 ============
 
-  yuoj-backend-judge-service:
-    container_name: yuoj-backend-judge-service
+  judgemind-backend-judge-service:
+    container_name: judgemind-backend-judge-service
     build:
-      context: ./yuoj-backend-judge-service
+      context: ./judgemind-backend-judge-service
       dockerfile: Dockerfile
     ports:
       - "8104:8104"
     networks:
       - mynetwork
     depends_on:
-      - yuoj-backend-user-service
-      - yuoj-backend-question-service
-      - yuoj-backend-gateway
+      - judgemind-backend-user-service
+      - judgemind-backend-question-service
+      - judgemind-backend-gateway
+    # ============ 新增部分开始 ============
+    environment:
+      - JAVA_OPTS=-Xmx256m -XX:+UseContainerSupport
+    command: java $JAVA_OPTS -jar app.jar
+    deploy:
+      resources:
+        limits:
+          memory: 350M
+    restart: unless-stopped
+    # ============ 新增部分结束 ============
 
 # 网络，不定义的话就是默认网络
 networks:
